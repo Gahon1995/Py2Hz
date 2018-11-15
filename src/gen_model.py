@@ -1,7 +1,5 @@
-import os
 from src import utils
 import time
-# from . import base_train
 from src import multi_base_train
 
 PROJECT_PATH = utils.PROJECT_PATH
