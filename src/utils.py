@@ -2,28 +2,21 @@ import json
 import re
 import os
 import pypinyin
-from src import load_pinyin
 import pickle
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 
-PINYIN_PATH = os.path.join(PROJECT_PATH, "data", "pinyin", "拼音汉字表.txt")
-WORDS_PATH = os.path.join(PROJECT_PATH, "data", "pinyin", "一二级汉字表.txt")
-NEWS_PATH = os.path.join(PROJECT_PATH, "train", "sina_news_gbk")
-ARTICLE_PATH = os.path.join(PROJECT_PATH, "train", "article")
+PINYIN_PATH = os.path.join(PROJECT_PATH, "train","data", "pinyin", "拼音汉字表.txt")
+WORDS_PATH = os.path.join(PROJECT_PATH, "train", "data", "pinyin", "一二级汉字表.txt")
+NEWS_PATH = os.path.join(PROJECT_PATH, "train", "article", "sina_news_gbk")
+ARTICLE_PATH = os.path.join(PROJECT_PATH, "train", "article", "others")
 
-PRO_DATA_WORDS = os.path.join(PROJECT_PATH, "data", "words.txt")
 
-BASE_MODEL = os.path.join(PROJECT_PATH, "data", "model", "base_model.json")
+BASE_MODEL = os.path.join(PROJECT_PATH, "train", "data", "base_model.json")
 PROB_MODEL = os.path.join(PROJECT_PATH, "data", "model", "prob_model.json")
-PICKLE_MODEL = os.path.join(PROJECT_PATH, "data", "model", "pickle_model.data")
 
 
-load_pinyin._init(PINYIN_PATH)
 
-hz2py = load_pinyin.get_hz2py()
-multi = load_pinyin.get_multi()
-pys = load_pinyin.get_pys()
 
 
 
@@ -32,6 +25,41 @@ sp = re.compile(r"\s|[0-9a-zA-Z]|\.|\(|\)|" + "|".join(["，", "。", "、", "�
                                                      " 【", "】", "\\|", "℃", ">>", "<<"]))
 
 words = dict()
+
+
+# 拼音 -> 汉字
+pys = dict()
+# 汉字：{拼音's}
+hz2py = dict()
+# 多音字
+multi = list()
+
+
+def read_from_pinyin_file(path):
+    with open(path, 'r', encoding='gbk') as fout:
+
+        for pinyin in fout:
+            pinyin = pinyin.strip("\n").split(" ")
+            key = pinyin[0]
+            pinyin.remove(pinyin[0])
+            pys[key] = pinyin
+
+
+# 获取当前字对应的拼音列表
+def _init(path):
+    read_from_pinyin_file(path)
+    for _py in pys:
+        for _word in pys[_py]:
+            if _word not in hz2py.keys():
+                hz2py.setdefault(_word, dict())
+                hz2py[_word][_py] = 1
+            else:
+                if _word not in multi:
+                    multi.append(_word)
+                hz2py[_word][_py] = 1
+
+
+_init(PINYIN_PATH)
 
 
 # 句子分割
@@ -107,4 +135,4 @@ if __name__ == "__main__":
 
     # print(get_chinese())
 
-    print(hz2py["疟"])
+    print(hz2py)

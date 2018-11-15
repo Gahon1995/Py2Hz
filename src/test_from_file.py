@@ -6,7 +6,7 @@ PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 
 # TODO - 将路径转换为多平台通用的格式
 
-TEST_DATA_PATH = os.path.join(PROJECT_PATH, "data", "pinyindata.txt")
+TEST_DATA_PATH = os.path.join(PROJECT_PATH, "train", "data", "pinyindata.txt")
 
 translate._init()
 

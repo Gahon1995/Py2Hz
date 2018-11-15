@@ -1,17 +1,11 @@
-from src import utils
 import time
+from src import utils
 from src import multi_base_train
 
 PROJECT_PATH = utils.PROJECT_PATH
 
-# TODO - 将路径转换为多平台通用的格式
-
-
-PRO_DATA_WORDS = utils.PRO_DATA_WORDS
-
 BASE_MODEL = utils.BASE_MODEL
 PROB_MODEL = utils.PROB_MODEL
-PICKLE_MODEL = utils.PICKLE_MODEL
 
 cnt_words = dict()
 cnt_hz2py = dict()
@@ -57,20 +51,6 @@ def gen_words():
     # 尝试优化
 
 
-def gen_words_by_data():
-    gen_words()
-    with open(PRO_DATA_WORDS, "r", encoding="utf-8") as fout:
-        count = 0
-        for line in fout:
-            count += 1
-            _word = list(line.strip().split("\t"))
-            if len(_word) == 2:
-                # print(_word, len(_word))
-                cnt_words[_word[0]] = float(_word[1]) / 100.0
-        # 平滑处理，但是要求count必须大于100
-        cnt_words["defalut"] = 1e-12
-
-
 def gen_hz2py():
     global cnt_hz2py
 
@@ -109,20 +89,9 @@ def _save_json():
     print("保存完成...")
 
 
-def _save_pickle():
-    print("保存数据...")
-    model = dict()
-    model["words"] = cnt_words
-    model["hz2py"] = cnt_hz2py
-    model["model"] = cnt_model
-    utils.save_pickle_file(PICKLE_MODEL, model)
-    print("保存完成...")
-
-
 # 直接从原始语料开始训练
 def start_train_all():
     print("开始训练数据....")
-    # base_train.train()
     multi_base_train.train()
     print("开始转换数据")
     _init_all()
@@ -146,25 +115,10 @@ def start_train_alone():
 
     print("转换完成")
     _save_json()
-    # _save_pickle()
-
-
-# 转换数据到一个文件
-def save_base():
-    model = dict()
-    model["words"] = cnt_words
-    model["hz2py"] = cnt_hz2py
-    model["model"] = cnt_model
-    utils.save_json_file(BASE_MODEL, model)
 
 
 if __name__ == "__main__":
     _start = time.time()
-
-    # print("loading file \" ", TEST_NEWS_PATH, "\" : ", end="")
-    # openfile(TEST_NEWS_PATH)
-    # utils.print_json(cnt_model)
-    # utils.print_json(cnt_hz2py)
 
     # start_train_all()   # 从语料库开始训练
     start_train_alone()     # 从二次数据中读取后开始训练

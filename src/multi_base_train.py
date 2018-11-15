@@ -98,13 +98,13 @@ def merge_data(tmp_words, tmp_hz2py, tmp_model):
                     base_model[_model]["words"][_mo] += tmp_model[_model]["words"][_mo]
 
 
-def multi_read_news():
+def multi_read_news(encode="gbk"):
     results = []
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
     files = os.listdir(NEWS_PATH)
     for file in files:
         if not os.path.isdir(file):
-            result = pool.apply_async(multi_open_news, args=(os.path.join(NEWS_PATH, file), "gbk"))
+            result = pool.apply_async(multi_open_news, args=(os.path.join(NEWS_PATH, file), encode))
             print("loading file \" ", file, "\"")
             results.append(result)
     pool.close()
@@ -115,13 +115,13 @@ def multi_read_news():
         merge_data(tmp_words, tmp_hz2py, tmp_model)
 
 
-def multi_read_article():
+def multi_read_article(encode="utf-8"):
     results = []
     pool = multiprocessing.Pool(multiprocessing.cpu_count())
     files = os.listdir(ARTICLE_PATH)
     for file in files:
         if not os.path.isdir(file):
-            result = pool.apply_async(multi_open_article, args=(os.path.join(ARTICLE_PATH, file), "utf-8"))
+            result = pool.apply_async(multi_open_article, args=(os.path.join(ARTICLE_PATH, file), encode))
             print("loading file \" ", file, "\"")
             results.append(result)
     pool.close()
@@ -142,7 +142,7 @@ def multi_open_news(path, encode):
         for line in f:
             # print(count)
             if count == 1000:
-                print(".")
+                print(".", end="")
                 count = 0
             count += 1
 
@@ -163,7 +163,7 @@ def multi_open_article(path, encode):
         for line in f:
             # print(count)
             if count == 1000:
-                print(".")
+                print(".", end="")
                 count = 0
             count += 1
 
@@ -176,7 +176,7 @@ def multi_open_article(path, encode):
 # 统一文件读取，方便增加训练材料
 def read():
     multi_read_article()
-    # multi_read_news()
+    multi_read_news()
 
 
 def save():
@@ -197,15 +197,7 @@ def train():
 if __name__ == "__main__":
     _start = time.time()
 
-    # print("loading file \" ", TEST_NEWS_PATH, "\" : ", end="")
-    # open_news(TEST_PAGES_PATH)
-    # utils.print_json(cnt_model)
-    # utils.print_json(cnt_hz2py)
-    # utils.print_json(cnt_words)
-
-    # read()
     train()
-    # save()
 
     _end = time.time()
 
