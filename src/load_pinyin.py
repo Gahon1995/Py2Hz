@@ -36,6 +36,9 @@ def get_hz2py():
     return hz2py
 
 
+def get_pys():
+    return pys
+
 def get_multi():
     # print("get multi")
     return multi

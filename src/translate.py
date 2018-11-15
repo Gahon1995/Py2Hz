@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 import json
 import os
 import sys
@@ -33,23 +34,11 @@ def _init():
     # 多音字选这个的概率 {'塞': {'sai': 0.8, 'se': 0.2},,}
     obs = data["hz2py"]
 
-    pys = read_from_pinyin_file()
+    pys = data["pinyin"]
     print("加载完成")
 
 
-def read_from_pinyin_file():
-    all_py = dict()
-    with open(PINYIN_PATH, 'r', encoding='gbk') as fout:
-
-        for pinyin in fout:
-            pinyin = pinyin.strip("\n").split(" ")
-            key = pinyin[0]
-            pinyin.remove(pinyin[0])
-            all_py[key] = pinyin
-    return all_py
-
-
-def translate(words: str, path_deep=1):
+def translate(words, path_deep=1):
     if len(words) == 0:
         return list(["", ""])
     words = list(words.strip().split(" "))
@@ -96,7 +85,7 @@ def translate(words: str, path_deep=1):
 
                 if _word not in model[pre_word]["words"].keys():
                     # 如果两个字没有联系，默认最小值
-                    this_pro = first[_word] * 0.11
+                    this_pro = 1e-20
                 else:
                     _cnt = model[pre_word]["words"][_word] / model[pre_word]["cnt"]
                     this_pro = _pro_word * model[pre_word]["words"][_word]
@@ -120,21 +109,21 @@ def translate(words: str, path_deep=1):
 
 
 def get_input():
-    deep = 3
+    deep = 1
     while True:
-        inp = input("请输入要转换的拼音： ").strip()
+        inp = input("\n请输入要转换的拼音： ").strip()
         if len(inp) == 0:
             print("无输入，退出中")
             break
         result = translate(inp, deep)
         for path in result:
-            print(path[0], path[1])
+            print(path[1])
 
 
 def read_from_file(in_path, out_path, encode="utf-8"):
     print("输入文件路径：", in_path)
     print("输出文件路径：", out_path)
-    with open(in_path, "r", encoding=encode) as fin, open(out_path, "w", encoding=encode) as fout:
+    with open(in_path, "r", encoding=encode) as fin, open(out_path, "w", encoding="gbk") as fout:
         while fout:
             data = fin.readline()
             # print(data)
@@ -152,8 +141,10 @@ if __name__ == "__main__":
     num = len(sys.argv)
     _init()
     if num == 1:
-        print("输入格式为: chengxu \"pinyin\"")
-        print("      or: chengxu input_path output_path")
+        print("输入格式为: translate.exe \"pinyin\"")
+        print("      or: translate.exe input_path output_path")
+        print("      or: python3 translate.py \"pinyin\"")
+        print("      or: python3 translate.exe input_path output_path")
         get_input()
     elif num == 2:
         print(translate(sys.argv[1], 3)[0][1])
@@ -163,6 +154,8 @@ if __name__ == "__main__":
         print("输入有误")
         print("输入格式为: chengxu \"pinyin\"")
         print("      or: chengxu input_path output_path")
+        print("      or: python3 translate.py \"pinyin\"")
+        print("      or: python3 translate.exe input_path output_path")
 
 
 

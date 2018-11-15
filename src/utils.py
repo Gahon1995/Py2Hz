@@ -23,7 +23,7 @@ load_pinyin._init(PINYIN_PATH)
 
 hz2py = load_pinyin.get_hz2py()
 multi = load_pinyin.get_multi()
-
+pys = load_pinyin.get_pys()
 
 
 

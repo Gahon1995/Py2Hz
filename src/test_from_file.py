@@ -32,6 +32,6 @@ with open(TEST_DATA_PATH, 'r', encoding='utf-8') as fout:
 
             if t[0][1][i] == target[i]:
                 right += 1
-        if t[0][1] != target:
-            print(t[0][1], target)
+        # if t[0][1] != target:
+        print(t[0][1], target)
     print(right/count)

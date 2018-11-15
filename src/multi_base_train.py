@@ -1,6 +1,6 @@
 import json
 import os
-from .import utils
+from src import utils
 import time
 import multiprocessing
 import copy

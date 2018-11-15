@@ -105,6 +105,7 @@ def _save_json():
     model["words"] = cnt_words
     model["hz2py"] = cnt_hz2py
     model["model"] = cnt_model
+    model["pinyin"] = utils.pys
     utils.save_json_file(PROB_MODEL, model)
 
     print("保存完成...")
@@ -167,8 +168,8 @@ if __name__ == "__main__":
     # utils.print_json(cnt_model)
     # utils.print_json(cnt_hz2py)
 
-    start_train_all()   # 从语料库开始训练
-    # start_train_alone()     # 从二次数据中读取后开始训练
+    # start_train_all()   # 从语料库开始训练
+    start_train_alone()     # 从二次数据中读取后开始训练
 
     _end = time.time()
 
