@@ -1,4 +1,9 @@
-# -*- coding: UTF-8 -*-
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# @Time    : 2018/11/16 17:39
+# @Author  : Gahon
+# @Email   : Gahon1995@gmail.com
+
 import json
 import os
 import sys
@@ -15,13 +20,23 @@ first = dict()
 obs = dict()
 
 
-def read_json_file(path):
-    with open(path, 'r', encoding="utf-8") as file:
+def read_json_file(path, encode="utf-8"):
+    """
+        读取JSON文件
+    :param path: 文件路径
+    :param encode: 编码方式，默认为utf-8
+    :return:
+    """
+    with open(path, 'r', encoding=encode) as file:
         return json.load(file)
 
 
 # 加载数据
 def _init():
+    """
+        从概率模型中加载数据，保存到全局变量中
+    :return:
+    """
     global obs, model, first, pys
     print("加载model...")
     data = read_json_file(PROB_MODEL)
@@ -37,6 +52,12 @@ def _init():
 
 
 def translate(words, path_deep=1):
+    """
+        转换函数，将一行拼音转换为一行文字
+    :param words:   一行以空格隔开的拼音
+    :param path_deep:   显示匹配结果的句子数量，默认只显示一个句子
+    :return:
+    """
     if len(words) == 0:
         return list(["", ""])
     words = list(words.strip().split(" "))
@@ -107,6 +128,10 @@ def translate(words, path_deep=1):
 
 
 def get_input():
+    """
+        从命令行输入拼音进行转换
+    :return:
+    """
     deep = 1
     while True:
         inp = input("\n请输入要转换的拼音： ").strip()
@@ -119,6 +144,13 @@ def get_input():
 
 
 def read_from_file(in_path, out_path, encode="utf-8"):
+    """
+        从文件中读取文件进行转换，并将转换结果保存到文件中
+    :param in_path:     拼音文件路径，要求里边只有拼音，并且每行的各个拼音用空格隔开
+    :param out_path:    输出结果文件路径
+    :param encode:      输入文件的编码方式设置，输出文件编码默认为gbk
+    :return:
+    """
     print("输入文件路径：", in_path)
     print("输出文件路径：", out_path)
     with open(in_path, "r", encoding=encode) as fin, open(out_path, "w", encoding="gbk") as fout:
@@ -135,7 +167,6 @@ def read_from_file(in_path, out_path, encode="utf-8"):
 
 
 if __name__ == "__main__":
-
     num = len(sys.argv)
     _init()
     if num == 1:

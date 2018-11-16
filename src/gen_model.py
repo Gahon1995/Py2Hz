@@ -1,3 +1,9 @@
+#!/usr/bin/python3
+# -*- coding: utf-8 -*-
+# @Time    : 2018/11/16 17:39
+# @Author  : Gahon
+# @Email   : Gahon1995@gmail.com
+
 import time
 from src import utils
 from src import multi_base_train
@@ -28,12 +34,14 @@ def _init_all():
     # 所有汉字列表  {"你"：cnt,,,}
     # 所有的汉字对应的拼音列表 {"和": {"he": cnt, "huo": cnt}}
     # 词组关系 {"你": {"cnt": cnt, "words": {"好":cnt, "们": cnt } } }
-
     cnt_words, cnt_hz2py, cnt_model = multi_base_train.get_cnt()
 
 
-# 使用词库计算每个字的频率
 def gen_words():
+    """
+        通过每个字的字频计算每个字的频率
+    :return:
+    """
     global cnt_words
 
     count = 0
@@ -52,6 +60,10 @@ def gen_words():
 
 
 def gen_hz2py():
+    """
+        计算每个字对应其中的一个拼音的概率（主要为了多音字）
+    :return:
+    """
     global cnt_hz2py
 
     for _word in cnt_hz2py:
@@ -64,6 +76,10 @@ def gen_hz2py():
 
 
 def gen_model():
+    """
+        将词频转换为出现"字A"后出现"字B"的概率
+    :return:
+    """
     global cnt_model
 
     _base = 1
@@ -78,6 +94,11 @@ def gen_model():
 
 
 def _save_json():
+    """
+        保存文件到JSON中去
+        将之前转换的所有概率全部存入一个文件，方便读取
+    :return:
+    """
     print("保存数据...")
     model = dict()
     model["words"] = cnt_words
@@ -89,8 +110,10 @@ def _save_json():
     print("保存完成...")
 
 
-# 直接从原始语料开始训练
 def start_train_all():
+    """
+        直接读取文章进行训练,会调用multi_base_train进行基础训练
+    """
     print("开始训练数据....")
     multi_base_train.train()
     print("开始转换数据")
@@ -98,14 +121,15 @@ def start_train_all():
     gen_hz2py()
     gen_model()
     gen_words()
-
     print("转换完成")
     # 保存最终模型
     _save_json()
 
 
-# 从中间计数的文件中读取文件进行训练
 def start_train_alone():
+    """
+        从词频文件读取词频信息进行转换得到概率模型
+    """
     print("开始训练数据....")
     print("开始转换数据")
     _init()
@@ -125,7 +149,4 @@ if __name__ == "__main__":
 
     _end = time.time()
 
-    print("总共耗时： ", round((_end - _start)/60, 2), "分钟")
-
-
-
+    print("总共耗时： ", round((_end - _start) / 60, 3), "分钟")
