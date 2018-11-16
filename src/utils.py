@@ -2,7 +2,6 @@ import json
 import re
 import os
 import pypinyin
-import pickle
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 
@@ -117,14 +116,8 @@ def save_json_file(path, data):
         json.dump(data, out, ensure_ascii=False)
 
 
-def save_pickle_file(path,data):
-    print("保存model到文件中")
-    with open(path, "wb") as out:
-        pickle.dump(data, out)
-
-
 def read_json_file(path):
-    with open(path, 'r') as file:
+    with open(path, 'r', encoding="utf-8") as file:
         return json.load(file)
 
 
