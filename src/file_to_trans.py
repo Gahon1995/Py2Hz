@@ -10,7 +10,7 @@ import os
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 TEST_DATA_PATH = os.path.join(PROJECT_PATH, "train", "data", "pinyindata.txt")
 
-translate._init()
+tr = translate.Trans()
 
 print("正在转换。。。。")
 
@@ -25,7 +25,7 @@ with open(TEST_DATA_PATH, 'r', encoding='utf-8') as fout:
         if data == "" or target == "":
             break
 
-        t = translate.translate(data, 1)
+        t = tr.translate(data, 1)
 
         count += len(target)
         for i in range(0, len(t[0][1])):
