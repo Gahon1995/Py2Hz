@@ -5,7 +5,7 @@ import pypinyin
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 
-PINYIN_PATH = os.path.join(PROJECT_PATH, "train","data", "pinyin", "拼音汉字表.txt")
+PINYIN_PATH = os.path.join(PROJECT_PATH, "train", "data", "pinyin", "拼音汉字表.txt")
 WORDS_PATH = os.path.join(PROJECT_PATH, "train", "data", "pinyin", "一二级汉字表.txt")
 NEWS_PATH = os.path.join(PROJECT_PATH, "train", "article", "sina_news_gbk")
 ARTICLE_PATH = os.path.join(PROJECT_PATH, "train", "article", "others")

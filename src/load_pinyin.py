@@ -1,3 +1,4 @@
+import os
 import json
 
 # 拼音 -> 汉字
@@ -39,6 +40,7 @@ def get_hz2py():
 def get_pys():
     return pys
 
+
 def get_multi():
     # print("get multi")
     return multi
@@ -51,7 +53,8 @@ def is_multi(word):
 
 
 if __name__ == "__main__":
-    # _init(os.path.join(os.path.abspath(os.path.dirname(os.getcwd())), "data", "pinyin", "拼音汉字表.txt"))
+    _init(os.path.join(
+        os.path.join(os.path.abspath(os.path.dirname(os.getcwd())), "train", "data", "pinyin", "拼音汉字表.txt")))
     print(json.dumps(hz2py, ensure_ascii=False, indent=4))
     # print(multi)
     print(is_multi("么"))

@@ -120,8 +120,8 @@ def start_train_alone():
 if __name__ == "__main__":
     _start = time.time()
 
-    # start_train_all()   # 从语料库开始训练
-    start_train_alone()     # 从二次数据中读取后开始训练
+    start_train_all()  # 从语料库开始训练
+    # start_train_alone()     # 从二次数据中读取后开始训练
 
     _end = time.time()
 
