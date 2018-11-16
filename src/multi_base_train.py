@@ -11,9 +11,8 @@ import time
 import multiprocessing
 import copy
 
-PROJECT_PATH = utils.PROJECT_PATH
-
 # 文件路径定义
+PROJECT_PATH = utils.PROJECT_PATH
 NEWS_PATH = utils.NEWS_PATH
 ARTICLE_PATH = utils.ARTICLE_PATH
 BASE_MODEL = utils.BASE_MODEL
@@ -33,6 +32,106 @@ def get_cnt():
         返回各个词频数据，供外部调用
     """
     return base_words, base_hz2py, base_model
+
+
+def train():
+    read()
+    save()
+
+
+# 统一文件读取，方便增加训练材料
+def read():
+    multi_read_article()
+    multi_read_news()
+
+
+def save():
+    print("保存数据...")
+    model = dict()
+    model["words"] = base_words
+    model["hz2py"] = base_hz2py
+    model["model"] = base_model
+    utils.save_json_file(BASE_MODEL, model)
+    print("保存完成...")
+
+
+def multi_read_news(encode="gbk"):
+    """
+        使用多线程的方式去对每个文件进行分析
+    :param encode:
+    :return:
+    """
+    results = []
+    pool = multiprocessing.Pool(multiprocessing.cpu_count())
+    files = os.listdir(NEWS_PATH)
+    for file in files:
+        if not os.path.isdir(file):
+            result = pool.apply_async(open_news, args=(os.path.join(NEWS_PATH, file), encode))
+            results.append(result)
+    pool.close()
+    pool.join()
+    print("\nfinish")
+    for result in results:
+        (tmp_words, tmp_hz2py, tmp_model) = result.get()
+        merge_data(tmp_words, tmp_hz2py, tmp_model)
+
+
+def open_news(path, encode):
+    print("loading file \"", path, "\"")
+    tmp_words = copy.deepcopy(cnt_words)
+    tmp_hz2py = copy.deepcopy(cnt_hz2py)
+    tmp_model = copy.deepcopy(cnt_model)
+    with open(path, 'r', encoding=encode) as f:
+        count = 0
+        for line in f:
+            if count == 1000:
+                print(".", end="")
+                count = 0
+            count += 1
+
+            if line.strip() == "":
+                continue
+            message = json.loads(line)
+            train_from_sentences(message["title"], tmp_words, tmp_hz2py, tmp_model)
+            train_from_sentences(message["html"], tmp_words, tmp_hz2py, tmp_model)
+    return tmp_words, tmp_hz2py, tmp_model
+
+
+def multi_read_article(encode="utf-8"):
+    results = []
+    pool = multiprocessing.Pool(multiprocessing.cpu_count())
+    files = os.listdir(ARTICLE_PATH)
+    for file in files:
+        if not os.path.isdir(file):
+            result = pool.apply_async(open_article, args=(os.path.join(ARTICLE_PATH, file), encode))
+
+            results.append(result)
+    pool.close()
+    pool.join()
+    print("\nfinish")
+    for result in results:
+        (tmp_words, tmp_hz2py, tmp_model) = result.get()
+        merge_data(tmp_words, tmp_hz2py, tmp_model)
+
+
+def open_article(path, encode):
+    print("loading file \"", path, "\"")
+    tmp_words = copy.deepcopy(cnt_words)
+    tmp_hz2py = copy.deepcopy(cnt_hz2py)
+    tmp_model = copy.deepcopy(cnt_model)
+    with open(path, 'r', encoding=encode) as f:
+        count = 0
+        for line in f:
+            # print(count)
+            if count == 1000:
+                print(".", end="")
+                count = 0
+            count += 1
+
+            if line.strip() == "":
+                continue
+            train_from_sentences(line, tmp_words, tmp_hz2py, tmp_model)
+    return tmp_words, tmp_hz2py, tmp_model
 
 
 def train_from_sentences(content: str, train_words, train_hz2py, train_model):
@@ -62,7 +161,7 @@ def train_from_sentences(content: str, train_words, train_hz2py, train_model):
                 end = min(pos + 2, len(_sentence))
                 pinyin = utils.multi2py(_sentence[start:end], _word)
                 if pinyin == "":
-                        continue
+                    continue
                 train_hz2py[_word][pinyin] += 1
             else:
                 # 对应拼音 + 1
@@ -121,106 +220,6 @@ def merge_data(train_words, train_hz2py, train_model):
                     base_model[_model]["words"][_mo] += train_model[_model]["words"][_mo]
 
 
-def multi_read_news(encode="gbk"):
-    """
-        使用多线程的方式去对每个文件进行分析
-    :param encode:
-    :return:
-    """
-    results = []
-    pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    files = os.listdir(NEWS_PATH)
-    for file in files:
-        if not os.path.isdir(file):
-            result = pool.apply_async(open_news, args=(os.path.join(NEWS_PATH, file), encode))
-            results.append(result)
-    pool.close()
-    pool.join()
-    print("\nfinish")
-    for result in results:
-        (tmp_words, tmp_hz2py, tmp_model) = result.get()
-        merge_data(tmp_words, tmp_hz2py, tmp_model)
-
-
-def multi_read_article(encode="utf-8"):
-    results = []
-    pool = multiprocessing.Pool(multiprocessing.cpu_count())
-    files = os.listdir(ARTICLE_PATH)
-    for file in files:
-        if not os.path.isdir(file):
-            result = pool.apply_async(open_article, args=(os.path.join(ARTICLE_PATH, file), encode))
-
-            results.append(result)
-    pool.close()
-    pool.join()
-    print("\nfinish")
-    for result in results:
-        (tmp_words, tmp_hz2py, tmp_model) = result.get()
-        merge_data(tmp_words, tmp_hz2py, tmp_model)
-
-
-def open_news(path, encode):
-    print("loading file \"", path, "\"")
-    tmp_words = copy.deepcopy(cnt_words)
-    tmp_hz2py = copy.deepcopy(cnt_hz2py)
-    tmp_model = copy.deepcopy(cnt_model)
-    with open(path, 'r', encoding=encode) as f:
-        count = 0
-        for line in f:
-            if count == 1000:
-                print(".", end="")
-                count = 0
-            count += 1
-
-            if line.strip() == "":
-                continue
-            message = json.loads(line)
-            train_from_sentences(message["title"], tmp_words, tmp_hz2py, tmp_model)
-            train_from_sentences(message["html"], tmp_words, tmp_hz2py, tmp_model)
-    return tmp_words, tmp_hz2py, tmp_model
-
-
-def open_article(path, encode):
-    print("loading file \"", path, "\"")
-    tmp_words = copy.deepcopy(cnt_words)
-    tmp_hz2py = copy.deepcopy(cnt_hz2py)
-    tmp_model = copy.deepcopy(cnt_model)
-    with open(path, 'r', encoding=encode) as f:
-        count = 0
-        for line in f:
-            # print(count)
-            if count == 1000:
-                print(".", end="")
-                count = 0
-            count += 1
-
-            if line.strip() == "":
-                continue
-            train_from_sentences(line, tmp_words, tmp_hz2py, tmp_model)
-    return tmp_words, tmp_hz2py, tmp_model
-
-
-# 统一文件读取，方便增加训练材料
-def read():
-    multi_read_article()
-    multi_read_news()
-
-
-def save():
-    print("保存数据...")
-    model = dict()
-    model["words"] = base_words
-    model["hz2py"] = base_hz2py
-    model["model"] = base_model
-    utils.save_json_file(BASE_MODEL, model)
-    print("保存完成...")
-
-
-def train():
-    read()
-    save()
-
-
 if __name__ == "__main__":
     _start = time.time()
 
@@ -228,5 +227,4 @@ if __name__ == "__main__":
 
     _end = time.time()
 
-    print("\n总共耗时： ", (_end - _start)/60, "分钟")
-
+    print("\n总共耗时： ", (_end - _start) / 60, "分钟")

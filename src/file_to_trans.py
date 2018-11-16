@@ -8,8 +8,6 @@ from src import translate
 import os
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
-
-
 TEST_DATA_PATH = os.path.join(PROJECT_PATH, "train", "data", "pinyindata.txt")
 
 translate._init()

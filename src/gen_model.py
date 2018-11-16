@@ -9,7 +9,6 @@ from src import utils
 from src import multi_base_train
 
 PROJECT_PATH = utils.PROJECT_PATH
-
 BASE_MODEL = utils.BASE_MODEL
 PROB_MODEL = utils.PROB_MODEL
 
