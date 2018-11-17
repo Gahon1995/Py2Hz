@@ -31,7 +31,7 @@ class Main(QMainWindow):
         self.ui.bt_trans.clicked.connect(self.trans)
         # 绑定转换按钮
         self.ui.t_trans.textChanged.connect(self.trans_f)
-        self.tr = ""
+        self.tr: Trans = None
         self.model = False
 
     def c_input(self):
@@ -68,15 +68,13 @@ class Main(QMainWindow):
         QTimer.singleShot(1000, self.load_data)
 
     def load_data(self):
-        try:
-            self.tr = Trans()
-            self.model = True
-        except FileNotFoundError:
-            self.ui.info.setText("加载失败，请检查model文件路径是否正确")
-        if self.model:
+        self.tr = Trans()
+        if self.tr.success:
             self.ui.bt_trans.setEnabled(True)
             self.ui.t_trans.setEnabled(True)
             self.ui.info.setText("model加载完成")
+        else:
+            self.ui.info.setText("加载失败，请检查model文件路径是否正确")
 
 
 if __name__ == "__main__":
