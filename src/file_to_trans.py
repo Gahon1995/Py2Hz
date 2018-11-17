@@ -7,6 +7,11 @@
 from src import translate
 import os
 
+"""
+    使用测试集进行测试，输出正确率
+    测试文件的格式为奇数行为拼音，偶数行为其对应的正确翻译
+"""
+
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 TEST_DATA_PATH = os.path.join(PROJECT_PATH, "train", "data", "pinyindata.txt")
 
