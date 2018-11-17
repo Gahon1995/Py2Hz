@@ -176,16 +176,18 @@ def show():
 if __name__ == "__main__":
     num = len(sys.argv)
     tr = Trans()
-    if tr.success:
-        if num == 1:
-            show()
-            tr.get_input()
-        elif num == 2:
-            print(tr.translate(sys.argv[1], 3)[0][1])
-        elif num == 3:
-            tr.read_from_file(sys.argv[1], sys.argv[2])
-        elif num == 4:
-            tr.read_from_file(sys.argv[1], sys.argv[2], sys.argv[3])
-        else:
-            print("输入有误")
-            show()
+    if not tr.success:
+        input("键入回车退出")
+        exit(-1)
+    if num == 1:
+        show()
+        tr.get_input()
+    elif num == 2:
+        print("\n转换结果： " + tr.translate(sys.argv[1], 3)[0][1])
+    elif num == 3:
+        tr.read_from_file(sys.argv[1], sys.argv[2])
+    elif num == 4:
+        tr.read_from_file(sys.argv[1], sys.argv[2], sys.argv[3])
+    else:
+        print("输入有误")
+        show()
