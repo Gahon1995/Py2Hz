@@ -52,9 +52,10 @@ class Main(QMainWindow):
         if in_file.isFile() and out_file.isFile():
             if self.tr.read_from_file(self.in_file_path, self.out_file_path, encode=encode):
                 self.ui.info.setText("转换完成")
+            else:
+                self.ui.info.setText("文件路径错误或者编码错误")
         else:
             self.ui.info.setText("输入文件路径有误")
-            self.ui.info
 
     def trans_f(self):
         self.ui.info.clear()

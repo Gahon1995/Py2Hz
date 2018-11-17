@@ -10,19 +10,7 @@ import sys
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 
-
 PROB_MODEL = os.path.join(PROJECT_PATH, "data", "model", "prob_model.json")
-
-
-def read_json_file(path, encode="utf-8"):
-    """
-        读取JSON文件
-    :param path: 文件路径
-    :param encode: 编码方式，默认为utf-8
-    :return:
-    """
-    with open(path, 'r', encoding=encode) as file:
-        return json.load(file)
 
 
 class Trans:
@@ -38,16 +26,22 @@ class Trans:
         :return:
         """
         print("加载model...")
-        data = read_json_file(PROB_MODEL)
-        # 两个字之间的的概率  '你': {'cnt': 0.8, 'words': {'好': 0.7, '门': 0.5},,,}
-        self.model = data["model"]
-        # 每个汉字开头的概率 {"你": 0.3, "还"： 0.2,,,}
-        self.first = data["words"]
-        # 多音字选这个的概率 {'塞': {'sai': 0.8, 'se': 0.2},,}
-        self.obs = data["hz2py"]
+        try:
+            with open(PROB_MODEL, 'r', encoding="utf-8") as file:
+                data = json.load(file)
+                # 两个字之间的的概率  '你': {'cnt': 0.8, 'words': {'好': 0.7, '门': 0.5},,,}
+                self.model = data["model"]
+                # 每个汉字开头的概率 {"你": 0.3, "还"： 0.2,,,}
+                self.first = data["words"]
+                # 多音字选这个的概率 {'塞': {'sai': 0.8, 'se': 0.2},,}
+                self.obs = data["hz2py"]
 
-        self.pys = data["pinyin"]
-        print("加载完成")
+                self.pys = data["pinyin"]
+                print("加载完成")
+        except FileNotFoundError:
+            print("model加载失败，请检查model文件路径")
+            input("输入任意内容退出.")
+            exit(-1)
 
     def translate(self, words, path_deep=1):
         """
@@ -151,39 +145,46 @@ class Trans:
         print("输出文件路径：", out_path)
         print("encode: ", encode)
         print("正在转换....")
-        with open(in_path, "r", encoding=encode) as fin, open(out_path, "w", encoding="gbk") as fout:
-            while fout:
-                data = fin.readline()
-                if data == "":
-                    break
-                result = self.translate(data)
-                fout.write(result[0][1])
-                fout.write("\n")
-
-        print("转换完成。")
+        try:
+            with open(in_path, "r", encoding=encode) as fin, open(out_path, "w", encoding="gbk") as fout:
+                while fout:
+                    data = fin.readline()
+                    if data == "":
+                        break
+                    result = self.translate(data)
+                    fout.write(result[0][1])
+                    fout.write("\n")
+            print("转换完成。")
+        except FileNotFoundError:
+            print("文件不存在，请检查输入路径")
+            return False
+        except LookupError:
+            print("读取编码格式错误，请更换读取编码")
+            return False
         return True
+
+
+def show():
+    print("输入格式为: translate.exe \"pinyin\"")
+    print("      or: translate.exe input_path output_path")
+    print("      or: translate.exe input_path output_path encode")
+    print("      or: python3 translate.py \"pinyin\"")
+    print("      or: python3 translate.exe input_path output_path")
+    print("      or: python3 translate.exe input_path output_path encode")
 
 
 if __name__ == "__main__":
     num = len(sys.argv)
     tr = Trans()
     if num == 1:
-        print("输入格式为: translate.exe \"pinyin\"")
-        print("      or: translate.exe input_path output_path")
-        print("      or: python3 translate.py \"pinyin\"")
-        print("      or: python3 translate.exe input_path output_path")
+        show()
         tr.get_input()
     elif num == 2:
         print(tr.translate(sys.argv[1], 3)[0][1])
     elif num == 3:
         tr.read_from_file(sys.argv[1], sys.argv[2])
+    elif num == 4:
+        tr.read_from_file(sys.argv[1], sys.argv[2], sys.argv[3])
     else:
         print("输入有误")
-        print("输入格式为: chengxu \"pinyin\"")
-        print("      or: chengxu input_path output_path")
-        print("      or: python3 translate.py \"pinyin\"")
-        print("      or: python3 translate.exe input_path output_path")
-
-
-
-
+        show()
