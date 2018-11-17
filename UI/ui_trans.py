@@ -8,7 +8,6 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
 class Ui_Trans(object):
     def setupUi(self, Trans):
         Trans.setObjectName("Trans")
@@ -92,7 +91,7 @@ class Ui_Trans(object):
         self.bt_output.setFont(font)
         self.bt_output.setObjectName("bt_output")
         self.bt_trans = QtWidgets.QPushButton(self.centralwidget)
-        self.bt_trans.setGeometry(QtCore.QRect(510, 260, 141, 51))
+        self.bt_trans.setGeometry(QtCore.QRect(440, 260, 141, 51))
         font = QtGui.QFont()
         font.setPointSize(14)
         font.setBold(True)
@@ -100,7 +99,7 @@ class Ui_Trans(object):
         self.bt_trans.setFont(font)
         self.bt_trans.setObjectName("bt_trans")
         self.info = QtWidgets.QLabel(self.centralwidget)
-        self.info.setGeometry(QtCore.QRect(110, 340, 631, 51))
+        self.info.setGeometry(QtCore.QRect(170, 340, 571, 51))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.info.setFont(font)
@@ -109,12 +108,6 @@ class Ui_Trans(object):
         self.info.setAlignment(QtCore.Qt.AlignLeading | QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
         self.info.setWordWrap(True)
         self.info.setObjectName("info")
-        self.t_trans = QtWidgets.QLineEdit(self.centralwidget)
-        self.t_trans.setGeometry(QtCore.QRect(190, 410, 561, 61))
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.t_trans.setFont(font)
-        self.t_trans.setObjectName("t_trans")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
         self.label_4.setGeometry(QtCore.QRect(60, 420, 121, 41))
         font = QtGui.QFont()
@@ -143,6 +136,17 @@ class Ui_Trans(object):
         self.label_5.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.label_5.setAutoFillBackground(False)
         self.label_5.setObjectName("label_5")
+        self.t_trans = QtWidgets.QTextEdit(self.centralwidget)
+        self.t_trans.setGeometry(QtCore.QRect(180, 410, 561, 51))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.t_trans.sizePolicy().hasHeightForWidth())
+        self.t_trans.setSizePolicy(sizePolicy)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.t_trans.setFont(font)
+        self.t_trans.setObjectName("t_trans")
         Trans.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(Trans)
         self.menubar.setEnabled(True)

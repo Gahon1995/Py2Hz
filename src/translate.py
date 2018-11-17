@@ -10,7 +10,6 @@ import sys
 
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.getcwd()))
 
-# TODO - 将路径转换为多平台通用的格式
 
 PROB_MODEL = os.path.join(PROJECT_PATH, "data", "model", "prob_model.json")
 
