@@ -18,6 +18,7 @@
     |       multi_base_train.py     ->  多线程字频统计
     |       gen_model.py            ->  频率模型生成函数
     |       translate.py            ->  拼音转汉字主函数
+    |       file_to_trans.py        ->  测试文件，得出正确率
     |
     |—— train:
     |       article:      部分训练语料
