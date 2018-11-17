@@ -133,7 +133,7 @@ class Trans:
             for path in result:
                 print(path[1])
 
-    def read_from_file(self, in_path, out_path, encode="utf-8"):
+    def read_from_file(self, in_path, out_path, encode="gbk"):
         """
             从文件中读取文件进行转换，并将转换结果保存到文件中
         :param in_path:     拼音文件路径，要求里边只有拼音，并且每行的各个拼音用空格隔开
