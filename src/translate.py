@@ -38,10 +38,10 @@ class Trans:
 
                 self.pys = data["pinyin"]
                 print("加载完成")
+                self.success = True
         except FileNotFoundError:
             print("model加载失败，请检查model文件路径")
-            input("输入任意内容退出.")
-            exit(-1)
+            self.success = False
 
     def translate(self, words, path_deep=1):
         """
@@ -176,15 +176,16 @@ def show():
 if __name__ == "__main__":
     num = len(sys.argv)
     tr = Trans()
-    if num == 1:
-        show()
-        tr.get_input()
-    elif num == 2:
-        print(tr.translate(sys.argv[1], 3)[0][1])
-    elif num == 3:
-        tr.read_from_file(sys.argv[1], sys.argv[2])
-    elif num == 4:
-        tr.read_from_file(sys.argv[1], sys.argv[2], sys.argv[3])
-    else:
-        print("输入有误")
-        show()
+    if tr.success:
+        if num == 1:
+            show()
+            tr.get_input()
+        elif num == 2:
+            print(tr.translate(sys.argv[1], 3)[0][1])
+        elif num == 3:
+            tr.read_from_file(sys.argv[1], sys.argv[2])
+        elif num == 4:
+            tr.read_from_file(sys.argv[1], sys.argv[2], sys.argv[3])
+        else:
+            print("输入有误")
+            show()
