@@ -24,7 +24,12 @@
     |            |——   sina_news_gbk   -> 新浪新闻材料，JSON格式
     |            |——   others          -> 其他文本材料
     |       data:         训练所用到的一些数据
-
+    |
+    |—— UI：         使用PyQt5制作的一个简单界面
+    |       main.py     ->  主界面
+    |       ui_trans.py ->  使用PyUIC通过ui文件生成
+    |       ui_trans.ui ->  使用QtDesigner设计的布局文件
+    |
 ## 2、 使用说明
 ### 1. 训练
 1. 从头开始
@@ -36,15 +41,17 @@
 将 `gen_model.py` 中的 "start_train_alone()" 取消注释，然后运行。会读取之前生成的基于词频的模型文件，然后进行处理得到基于概率的模型
 
 ### 2. 拼音转汉字
-一共有两种使用方式
+一共有三种使用方式
 
-1. 封装软件使用
+1、 封装软件使用
 
 使用方式为  `translate.exe "待转换的拼音"` 或者 `translate.exe input_path output_path` 的方式来进行转换
 
-2. 运行`translate.py`文件来使用
+2、 运行`translate.py`文件来使用
 
 使用方式为 `pyhon3 translate.py "待转换的拼音` 或者 `pyhon3 translate.py input_path output_path`
+
+3、 运行UI文件下的`main.py`文件将会显示 一个UI界面，方便操作（前提得先安装好QT相关库)
 
 ### 3. 注意事项
 1. input_file 的编码方式需要为gbk，否则会无法读取。
