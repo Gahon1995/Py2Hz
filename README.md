@@ -22,7 +22,7 @@
     |
     |—— train:
     |       article:      部分训练语料
-    |            |——   sina_news_gbk   -> 新浪新闻材料，JSON格式
+    |            |——   sina_news_gbk   -> 新浪新闻材料，JSON格式(内容太大，没上传)
     |            |——   others          -> 其他文本材料
     |       data:         训练所用到的一些数据
     |
